@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://js.stripe.com/v3/"></script>
+
+    <style>
+      .hidden { display: none; }
+      .form-group { margin-bottom: 15px; }
+      label { display: block; margin-bottom: 5px; font-weight: bold; }
+      input, select { width: 100%; padding: 8px; }
+    </style>
+</head>
+<body>
+  <h2>Checkout</h2>
+  <p>Your total is: £<span id="final-total">0.00</span></p>
+
+  <form id="order-form">
+    <div class="form-group">
+      <label for="order-type">Order Type</label>
+      <select id="order-type" required>
+        <option value="">Select</option>
+        <option value="pickup">Pickup</option>
+        <option value="delivery">Delivery</option>
+        <div id="online-payment" class="hidden">
+  <button type="button" id="pay-online">Pay Online</button>
+</div>
+
+      </select>
+    </div>
+
+    <div id="delivery-fields" class="hidden">
+      <div class="form-group">
+        <label for="address">Delivery Address</label>
+        <input type="text" id="address" placeholder="123 Coffee Lane">
+      </div>
+      <div class="form-group">
+  <label for="payment-method">Payment Method</label>
+  <select id="payment-method" required>
+    <option value="">Select</option>
+    <option value="card">Card</option>
+    <option value="cash">Cash</option>
+  </select>
+</div>
+      <div class="form-group">
+        <label for="postcode">Postcode</label>
+        <input type="text" id="postcode" placeholder="BL9 0YZ">
+      </div>
+    </div>
+
+    <button type="submit">Confirm Order</button>
+  </form>   
+
+<script>
+
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const total = localStorage.getItem("cartTotal") || "0.00";
+    document.getElementById("final-total").textContent = total;
+
+    const orderType = document.getElementById("order-type");
+    const deliveryFields = document.getElementById("delivery-fields");
+    const paymentMethod = document.getElementById("payment-method");
+
+    orderType.addEventListener("change", () => {
+      deliveryFields.classList.toggle("hidden", orderType.value !== "delivery");
+    });
+
+    document.getElementById("order-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const type = orderType.value;
+      const address = document.getElementById("address").value.trim();
+      const postcode = document.getElementById("postcode").value.trim();
+      const payment = paymentMethod.value;
+
+      if (!type) {
+        alert("Please select Pickup or Delivery.");
+        return;
+      }
+
+      if (type === "delivery" && (!address || !postcode)) {
+        alert("Please enter your address and postcode for delivery.");
+        return;
+      }
+
+      if (!payment) {
+        alert("Please select a payment method.");
+        return;
+      }
+
+      let message = `Thank you for your ${type} order!\nPayment method: ${payment}`;
+      if (payment === "card") {
+        message += "\nPlease proceed to card payment at the counter or online.";
+      } else {
+        message += "\nPlease have cash ready at pickup or delivery.";
+      }
+
+      alert(message);
+      localStorage.removeItem("cartTotal");
+      window.location.href = "index.html";
+    });
+  });
+
+
+  
+</script>
+</body>
+</html>

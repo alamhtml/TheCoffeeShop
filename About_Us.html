@@ -5,6 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+     <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script>
+    (function(){
+      emailjs.init("service_ycnh6ag"); // Replace with your actual public key
+    })();
+  </script>
+
 </head>
 <header>
          <div>
@@ -29,13 +36,13 @@
       </section>
     
       <section class="contact-section">
-        <h2>Contact Us</h2>
-        <form>
-           <input type="text" placeholder="Name">
-           <input type="email" placeholder="Email">
-           <textarea placeholder="Message"></textarea>
-           <button>Send</button>
-        </form>
+<h2>Contact Us</h2>
+<form id="contact-form">
+  <input type="text" name="name" placeholder="Name" required>
+  <input type="email" name="email" placeholder="Email" required>
+  <textarea name="message" placeholder="Message" required></textarea>
+  <button type="submit">Send</button>
+</form>
         <footer id="ft">
             <div id="c">
          <a href="https://www.facebook.com/"><img src="./image/Facebook.svg" width="40vw"></a>
@@ -45,4 +52,16 @@
       </div>
             <p>Copyright © 2021 MY Coffee Shop</p>
 </body>
+            <script>
+  document.getElementById("contact-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    emailjs.sendForm("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", this)
+      .then(function() {
+        alert("Message sent successfully!");
+      }, function(error) {
+        alert("Failed to send message. Error: " + JSON.stringify(error));
+      });
+  });
+</script>
 </html>

@@ -1,6 +1,7 @@
 "use strict";
 
 const path = require("node:path");
+const fs = require("node:fs");
 const express = require("express");
 
 const app = express();
@@ -16,9 +17,13 @@ const pages = [
   ["cart.js", "/cart.js"]
 ];
 
+const publicFiles = new Map(
+  pages.map(([file]) => [file, fs.readFileSync(path.join(__dirname, file))])
+);
+
 for (const [file, route] of pages) {
   app.get(route, (_request, response) => {
-    response.sendFile(path.join(__dirname, file));
+    response.type(file).send(publicFiles.get(file));
   });
 }
 

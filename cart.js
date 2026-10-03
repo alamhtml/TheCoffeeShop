@@ -153,16 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       if (!orderForm.reportValidity()) return;
 
-      const type = orderType.value;
-      const payment = document.getElementById("payment-method").value;
-      feedback.textContent = `Thanks! Your ${type} order is confirmed. Please pay ${payment === "card" ? "by card in person" : "in cash"} when you ${type === "pickup" ? "collect it" : "receive it"}.`;
-      saveCart([]);
-      renderCart();
-      orderForm.reset();
-      deliveryFields.hidden = true;
-      address.required = false;
-      postcode.required = false;
-      feedback.focus();
+      feedback.textContent = "Your details look good. This demo does not send orders to the shop yet, so your basket is saved here for you to place in person.";
     });
   }
 

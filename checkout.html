@@ -2,110 +2,55 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Checkout</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://js.stripe.com/v3/"></script>
-
-    <style>
-      .hidden { display: none; }
-      .form-group { margin-bottom: 15px; }
-      label { display: block; margin-bottom: 5px; font-weight: bold; }
-      input, select { width: 100%; padding: 8px; }
-    </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Review your basket and choose how to collect your order.">
+  <title>Your basket | MY Coffee Shop</title>
+  <link rel="stylesheet" href="sytle.css">
 </head>
 <body>
-  <h2>Checkout</h2>
-  <p>Your total is: £<span id="final-total">0.00</span></p>
-
-  <form id="order-form">
-    <div class="form-group">
-      <label for="order-type">Order Type</label>
-      <select id="order-type" required>
-        <option value="">Select</option>
-        <option value="pickup">Pickup</option>
-        <option value="delivery">Delivery</option>
-        <div id="online-payment" class="hidden">
-  <button type="button" id="pay-online">Pay Online</button>
-</div>
-
-      </select>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="MY Coffee Shop home"><img src="image/logo.png" alt="" width="56" height="56"><span>MY <strong>Coffee Shop</strong></span></a>
+    <nav aria-label="Main navigation"><ul><li><a href="index.html">Home</a></li><li><a href="Drinks.html">Drinks</a></li><li><a href="Pastries.html">Pastries</a></li><li><a href="About_Us.html">Our story</a></li></ul></nav>
+    <a class="header-cart" href="checkout.html" aria-current="page">Basket <span aria-hidden="true">· £</span><span id="cart-total">0.00</span></a>
+  </header>
+  <main class="checkout-page">
+    <div class="page-heading checkout-heading"><p class="eyebrow">Nearly time for something lovely</p><h1>Your basket</h1><p>Check your order and choose pickup or delivery.</p></div>
+    <div class="checkout-layout">
+      <section class="basket-panel" aria-labelledby="basket-title">
+        <h2 id="basket-title">Order summary</h2>
+        <div id="basket-items" class="basket-items"></div>
+        <p id="empty-basket" class="empty-basket" hidden>Your basket is empty. <a href="Drinks.html">Browse the menu</a> and add something delicious.</p>
+        <div class="basket-total"><span>Total</span><strong>£<span id="final-total">0.00</span></strong></div>
+      </section>
+      <section class="order-panel" aria-labelledby="order-title">
+        <h2 id="order-title">How would you like your order?</h2>
+        <form id="order-form">
+          <label class="field-label" for="order-type">Order type</label>
+          <select id="order-type" name="order-type" required>
+            <option value="">Choose one</option>
+            <option value="pickup">Pickup</option>
+            <option value="delivery">Delivery</option>
+          </select>
+          <div id="delivery-fields" class="delivery-fields" hidden>
+            <label class="field-label" for="address">Delivery address</label>
+            <input id="address" name="address" type="text" autocomplete="street-address" placeholder="House number and street">
+            <label class="field-label" for="postcode">Postcode</label>
+            <input id="postcode" name="postcode" type="text" autocomplete="postal-code" placeholder="e.g. BL9 0YZ">
+          </div>
+          <label class="field-label" for="payment-method">Payment</label>
+          <select id="payment-method" name="payment-method" required>
+            <option value="">Choose one</option>
+            <option value="card">Card at the shop</option>
+            <option value="cash">Cash on collection or delivery</option>
+          </select>
+          <p class="payment-note">Online card payment isn’t available yet. Card payments are completed in person.</p>
+          <button id="confirm-order" class="primary-button" type="submit">Place order</button>
+          <p id="order-feedback" class="form-feedback" role="status" aria-live="polite"></p>
+        </form>
+      </section>
     </div>
-
-    <div id="delivery-fields" class="hidden">
-      <div class="form-group">
-        <label for="address">Delivery Address</label>
-        <input type="text" id="address" placeholder="123 Coffee Lane">
-      </div>
-      <div class="form-group">
-  <label for="payment-method">Payment Method</label>
-  <select id="payment-method" required>
-    <option value="">Select</option>
-    <option value="card">Card</option>
-    <option value="cash">Cash</option>
-  </select>
-</div>
-      <div class="form-group">
-        <label for="postcode">Postcode</label>
-        <input type="text" id="postcode" placeholder="BL9 0YZ">
-      </div>
-    </div>
-
-    <button type="submit">Confirm Order</button>
-  </form>   
-
-<script>
-
-
-  document.addEventListener("DOMContentLoaded", () => {
-    const total = localStorage.getItem("cartTotal") || "0.00";
-    document.getElementById("final-total").textContent = total;
-
-    const orderType = document.getElementById("order-type");
-    const deliveryFields = document.getElementById("delivery-fields");
-    const paymentMethod = document.getElementById("payment-method");
-
-    orderType.addEventListener("change", () => {
-      deliveryFields.classList.toggle("hidden", orderType.value !== "delivery");
-    });
-
-    document.getElementById("order-form").addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      const type = orderType.value;
-      const address = document.getElementById("address").value.trim();
-      const postcode = document.getElementById("postcode").value.trim();
-      const payment = paymentMethod.value;
-
-      if (!type) {
-        alert("Please select Pickup or Delivery.");
-        return;
-      }
-
-      if (type === "delivery" && (!address || !postcode)) {
-        alert("Please enter your address and postcode for delivery.");
-        return;
-      }
-
-      if (!payment) {
-        alert("Please select a payment method.");
-        return;
-      }
-
-      let message = `Thank you for your ${type} order!\nPayment method: ${payment}`;
-      if (payment === "card") {
-        message += "\nPlease proceed to card payment at the counter or online.";
-      } else {
-        message += "\nPlease have cash ready at pickup or delivery.";
-      }
-
-      alert(message);
-      localStorage.removeItem("cartTotal");
-      window.location.href = "index.html";
-    });
-  });
-
-
-  
-</script>
+  </main>
+  <footer class="site-footer"><a class="brand brand-footer" href="index.html"><img src="image/logo.png" alt="" width="44" height="44"><span>MY <strong>Coffee Shop</strong></span></a><p>Good things, brewed daily.</p><small>© <span data-year></span> MY Coffee Shop</small></footer>
+  <script src="cart.js" defer></script>
 </body>
 </html>

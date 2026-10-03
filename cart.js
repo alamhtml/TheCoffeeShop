@@ -1,166 +1,172 @@
+"use strict";
 
-// let cartTotal = 0;
+const CART_KEY = "coffeeShopCart";
+const LEGACY_TOTAL_KEY = "cartTotal";
 
-// document.addEventListener("DOMContentLoaded", () => {
-//   const cartDisplay = document.getElementById("cart-total");
-
-//   document.querySelectorAll(".add-to-cart").forEach(button => {
-//     button.addEventListener("click", () => {
-//       const price = parseFloat(button.getAttribute("data-price"));
-//       cartTotal += price;
-//       cartDisplay.textContent = cartTotal.toFixed(2);
-//     });
-//   });
-// });
-// const onlinePayment = document.getElementById("online-payment");
-
-// paymentMethod.addEventListener("change", () => {
-//   onlinePayment.classList.toggle("hidden", paymentMethod.value !== "card");
-// });
-
-// document.getElementById("pay-online").addEventListener("click", async () => {
-//   const stripe = stripe("pk_test_YOUR_PUBLIC_KEY"); // Replace with your Stripe public key
-
-//   const response = await fetch("/create-checkout-session", {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({ amount: parseFloat(total) * 100 }) // amount in pence
-//   });
-
-//   const session = await response.json();
-//   await stripe.redirectToCheckout({ sessionId: session.id });
-// });
-
-
-
-// document.addEventListener("DOMContentLoaded", () => {
-// const cartDisplay = document.getElementById("cart-total");
-// let cartTotal = parseFloat(localStorage.getItem("cartTotal")) || 0;
-// cartDisplay.textContent = cartTotal.toFixed(2);
-
-//   document.querySelectorAll(".add-to-cart").forEach(button => {
-//     button.addEventListener("click", () => {
-// const price = parseFloat(button.getAttribute("data-price"));
-//     cartTotal += price;
-//     localStorage.setItem("cartTotal", cartTotal.toFixed(2));
-//       cartDisplay.textContent = cartTotal.toFixed(2);
-//     });
-//   });
-// });
-
-
-// let cart = JSON.parse(localStorage.getItem("cart")) || [];
-// let total = cart.reduce((sum, item) => sum + item.price, 0);
-// document.querySelector(".cart-total").textContent = `£ ${total.toFixed(2)}`;
-
-// // cart.js
-// function updateCartTotal(amount) {
-//   let currentTotal = parseFloat(localStorage.getItem("cartTotal")) || 0;
-//   currentTotal += amount;
-//   localStorage.setItem("cartTotal", currentTotal.toFixed(2));
-//   document.getElementById("cart-total").textContent = currentTotal.toFixed(2);
-// }
-
-// function loadCartTotal() {
-//   const total = localStorage.getItem("cartTotal") || "0.00";
-//   document.getElementById("cart-total").textContent = total;
-// }
-
-// window.onload = loadCartTotal;
-
-
-// cart.js
-
-// Load cart total on page load
-// window.onload = function () {
-//   loadCartTotal();
-//   attachAddToCartListeners();
-// };
-
-// // Load the cart total from localStorage
-// function loadCartTotal() {
-//   const total = localStorage.getItem("cartTotal") || "0.00";
-//   const cartDisplay = document.getElementById("cart-total");
-//   if (cartDisplay) {
-//     cartDisplay.textContent = total;
-//   }
-// }
-
-// // Update the cart total and save to localStorage
-// function updateCartTotal(amount) {
-//   let currentTotal = parseFloat(localStorage.getItem("cartTotal")) || 0;
-//   currentTotal += amount;
-//   const newTotal = currentTotal.toFixed(2);
-//   localStorage.setItem("cartTotal", newTotal);
-
-//   const cartDisplay = document.getElementById("cart-total");
-//   if (cartDisplay) {
-//     cartDisplay.textContent = newTotal;
-//   }
-// }
-
-// // Attach click listeners to all "Add to Cart" buttons
-// function attachAddToCartListeners() {
-//   const buttons = document.querySelectorAll("button, input[type='button']");
-//   buttons.forEach(button => {
-//     if (button.textContent.includes("Add to Cart") || button.value.includes("Add to Cart")) {
-//       button.addEventListener("click", () => {
-//         const priceText = button.previousSibling.textContent || button.parentElement.textContent;
-//         const priceMatch = priceText.match(/£([0-9]+(?:\\.[0-9]{1,2})?)/);
-//         if (priceMatch) {
-//           const price = parseFloat(priceMatch[1]);
-//           updateCartTotal(price);
-//         }
-//       });
-//     }
-//   });
-// }
-
-
-// Load cart total on page load
-document.addEventListener("DOMContentLoaded", () => {
-  const cartDisplay = document.getElementById("cart-total");
-  let cartTotal = parseFloat(localStorage.getItem("cartTotal")) || 0;
-  if (cartDisplay) {
-    cartDisplay.textContent = cartTotal.toFixed(2);
+function getCart() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
+    if (!Array.isArray(stored)) return [];
+    return stored.filter(item =>
+      item &&
+      typeof item.name === "string" &&
+      Number.isInteger(item.quantity) &&
+      item.quantity > 0 &&
+      Number.isInteger(item.price) &&
+      item.price >= 0
+    );
+  } catch {
+    return [];
   }
+}
 
-  // Add to Cart button logic
+function saveCart(cart) {
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+}
+
+function cartTotal(cart) {
+  return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+}
+
+function formatPrice(pence) {
+  return (pence / 100).toFixed(2);
+}
+
+function renderCart() {
+  const cart = getCart();
+  const total = cartTotal(cart);
+  const totalDisplay = document.getElementById("cart-total");
+  if (totalDisplay) totalDisplay.textContent = formatPrice(total);
+
+  const finalTotal = document.getElementById("final-total");
+  if (finalTotal) finalTotal.textContent = formatPrice(total);
+
+  const basketItems = document.getElementById("basket-items");
+  if (basketItems) {
+    basketItems.replaceChildren();
+    cart.forEach(item => {
+      const row = document.createElement("div");
+      row.className = "basket-item";
+
+      const details = document.createElement("div");
+      details.className = "basket-item-details";
+      const name = document.createElement("strong");
+      name.textContent = item.name;
+      const price = document.createElement("span");
+      price.textContent = `£${formatPrice(item.price)} each`;
+      details.append(name, price);
+
+      const controls = document.createElement("div");
+      controls.className = "quantity-controls";
+      controls.setAttribute("aria-label", `${item.name} quantity`);
+      const decrease = document.createElement("button");
+      decrease.type = "button";
+      decrease.textContent = "−";
+      decrease.setAttribute("aria-label", `Remove one ${item.name}`);
+      decrease.dataset.cartAction = "decrease";
+      decrease.dataset.itemName = item.name;
+      const quantity = document.createElement("span");
+      quantity.textContent = item.quantity;
+      quantity.setAttribute("aria-live", "polite");
+      const increase = document.createElement("button");
+      increase.type = "button";
+      increase.textContent = "+";
+      increase.setAttribute("aria-label", `Add one ${item.name}`);
+      increase.dataset.cartAction = "increase";
+      increase.dataset.itemName = item.name;
+      controls.append(decrease, quantity, increase);
+
+      const lineTotal = document.createElement("strong");
+      lineTotal.className = "basket-line-total";
+      lineTotal.textContent = `£${formatPrice(item.price * item.quantity)}`;
+      row.append(details, controls, lineTotal);
+      basketItems.append(row);
+    });
+
+    const emptyBasket = document.getElementById("empty-basket");
+    if (emptyBasket) emptyBasket.hidden = cart.length !== 0;
+    const confirmOrder = document.getElementById("confirm-order");
+    if (confirmOrder) confirmOrder.disabled = cart.length === 0;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Discard the old total-only format: it has no product details to restore.
+  if (!localStorage.getItem(CART_KEY)) localStorage.removeItem(LEGACY_TOTAL_KEY);
+  renderCart();
+
   document.querySelectorAll(".add-to-cart").forEach(button => {
     button.addEventListener("click", () => {
-      const price = parseFloat(button.getAttribute("data-price"));
-      cartTotal += price;
-      localStorage.setItem("cartTotal", cartTotal.toFixed(2));
-      if (cartDisplay) {
-        cartDisplay.textContent = cartTotal.toFixed(2);
-      }
+      const name = button.dataset.name;
+      const pricePence = Math.round(Number(button.dataset.price) * 100);
+      if (!name || !Number.isSafeInteger(pricePence) || pricePence <= 0) return;
+
+      const cart = getCart();
+      const existing = cart.find(item => item.name === name && item.price === pricePence);
+      if (existing) existing.quantity += 1;
+      else cart.push({ name, price: pricePence, quantity: 1 });
+      saveCart(cart);
+      renderCart();
+
+      const feedback = document.querySelector(".cart-feedback");
+      if (feedback) feedback.textContent = `${name} added to your basket.`;
     });
   });
 
-  // Payment method toggle
-  const paymentMethod = document.getElementById("payment-method");
-  const onlinePayment = document.getElementById("online-payment");
-  if (paymentMethod && onlinePayment) {
-    paymentMethod.addEventListener("change", () => {
-      onlinePayment.classList.toggle("hidden", paymentMethod.value !== "card");
+  const basketItems = document.getElementById("basket-items");
+  if (basketItems) {
+    basketItems.addEventListener("click", event => {
+      const button = event.target.closest("button[data-cart-action]");
+      if (!button) return;
+      const cart = getCart();
+      const item = cart.find(entry => entry.name === button.dataset.itemName);
+      if (!item) return;
+      if (button.dataset.cartAction === "increase") item.quantity += 1;
+      else item.quantity -= 1;
+      saveCart(cart.filter(entry => entry.quantity > 0));
+      renderCart();
     });
   }
 
-  // Stripe payment logic
-  const payOnlineBtn = document.getElementById("pay-online");
-  if (payOnlineBtn) {
-    payOnlineBtn.addEventListener("click", async () => {
-      const stripe = Stripe("pk_test_YOUR_PUBLIC_KEY"); // Replace with your Stripe public key
-      const amount = parseFloat(localStorage.getItem("cartTotal")) || 0;
-
-      const response = await fetch("/create-checkout-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: Math.round(amount * 100) }) // amount in pence
-      });
-
-      const session = await response.json();
-      await stripe.redirectToCheckout({ sessionId: session.id });
+  const orderType = document.getElementById("order-type");
+  const deliveryFields = document.getElementById("delivery-fields");
+  const address = document.getElementById("address");
+  const postcode = document.getElementById("postcode");
+  if (orderType && deliveryFields) {
+    orderType.addEventListener("change", () => {
+      const deliverySelected = orderType.value === "delivery";
+      deliveryFields.hidden = !deliverySelected;
+      address.required = deliverySelected;
+      postcode.required = deliverySelected;
     });
   }
+
+  const orderForm = document.getElementById("order-form");
+  if (orderForm) {
+    orderForm.addEventListener("submit", event => {
+      event.preventDefault();
+      const cart = getCart();
+      const feedback = document.getElementById("order-feedback");
+      if (!cart.length) {
+        feedback.textContent = "Add an item to your basket before placing an order.";
+        return;
+      }
+      if (!orderForm.reportValidity()) return;
+
+      const type = orderType.value;
+      const payment = document.getElementById("payment-method").value;
+      feedback.textContent = `Thanks! Your ${type} order is confirmed. Please pay ${payment === "card" ? "by card in person" : "in cash"} when you ${type === "pickup" ? "collect it" : "receive it"}.`;
+      saveCart([]);
+      renderCart();
+      orderForm.reset();
+      deliveryFields.hidden = true;
+      address.required = false;
+      postcode.required = false;
+      feedback.focus();
+    });
+  }
+
+  document.querySelectorAll("[data-year]").forEach(element => {
+    element.textContent = new Date().getFullYear();
+  });
 });

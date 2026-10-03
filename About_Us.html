@@ -1,67 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="sytle.css">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-     <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-  <script>
-    (function(){
-      emailjs.init("service_ycnh6ag"); // Replace with your actual public key
-    })();
-  </script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Get to know the people and passion behind MY Coffee Shop.">
+  <title>Our story | MY Coffee Shop</title>
+  <link rel="stylesheet" href="sytle.css">
 </head>
-<header>
-         <div>
-         <img src="./image/logo.png" alt="MY Coffee Shop Logo" width="80">
-         </div>
-         <nav>
-            <ul>
-               <li><a href="./index.html">Home</a></li>
-               <li><a href="./Drinks.html">Drinks Menu</a></li>
-               <li><a href="Pastries.html">Pastries Menu</a></li>
-               <li><a href="./About_Us.html">Contact</a></li>
-            </ul>
-         </nav>
-      </header>
 <body>
-
-    
-    <section class="hero-section">
-        <div class="left">
-    <h2>About Us</h2>
-         <p>We are a family-owned business that takes pride in serving the best quality coffee and baked goods to our customers. Our secret recipe and passion for coffee will keep you coming back for more.</p>
-      </section>
-    
-      <section class="contact-section">
-<h2>Contact Us</h2>
-<form id="contact-form">
-  <input type="text" name="name" placeholder="Name" required>
-  <input type="email" name="email" placeholder="Email" required>
-  <textarea name="message" placeholder="Message" required></textarea>
-  <button type="submit">Send</button>
-</form>
-        <footer id="ft">
-            <div id="c">
-         <a href="https://www.facebook.com/"><img src="./image/Facebook.svg" width="40vw"></a>
-             <a href="https://www.twitter.com/"><img src="./image/Twitter.svg" width="40vw"></a>
-             <a href="https://www.instagram.com/"><img src="./image/nstagram.svg" width="40vw"></a>
-             <a href="https://www.linkedin.com/"><img src="./image/Linkedin.svg" width="40vw"></a>
-      </div>
-            <p>Copyright © 2021 MY Coffee Shop</p>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="MY Coffee Shop home"><img src="image/logo.png" alt="" width="56" height="56"><span>MY <strong>Coffee Shop</strong></span></a>
+    <nav aria-label="Main navigation"><ul><li><a href="index.html">Home</a></li><li><a href="Drinks.html">Drinks</a></li><li><a href="Pastries.html">Pastries</a></li><li><a aria-current="page" href="About_Us.html">Our story</a></li></ul></nav>
+    <a class="header-cart" href="checkout.html">Basket <span aria-hidden="true">· £</span><span id="cart-total">0.00</span></a>
+  </header>
+  <main>
+    <section class="story-hero">
+      <img src="image/coffee_bar.jpeg" alt="Inside the MY Coffee Shop coffee bar">
+      <div><p class="eyebrow">A little about us</p><h1>Made with care.<br>Shared with you.</h1><p>We’re a family-owned coffee shop with a simple idea: serve lovely coffee and fresh bakes, and make everyone feel welcome.</p><a class="button-link" href="Drinks.html">Come find your favourite <span aria-hidden="true">→</span></a></div>
+    </section>
+    <section class="welcome story-note">
+      <p class="eyebrow">Our kind of everyday</p>
+      <h2>Good things, made fresh.</h2>
+      <p>Whether it’s your first coffee of the morning or a pastry shared over a catch-up, we’re happy you’re here. Take a look at the menu and make yourself at home.</p>
+      <a class="text-link" href="Pastries.html">See what’s fresh from the oven →</a>
+    </section>
+  </main>
+  <footer class="site-footer"><a class="brand brand-footer" href="index.html"><img src="image/logo.png" alt="" width="44" height="44"><span>MY <strong>Coffee Shop</strong></span></a><p>Good things, brewed daily.</p><small>© <span data-year></span> MY Coffee Shop</small></footer>
+  <script src="cart.js" defer></script>
 </body>
-            <script>
-  document.getElementById("contact-form").addEventListener("submit", function(e) {
-    e.preventDefault();
-
-    emailjs.sendForm("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", this)
-      .then(function() {
-        alert("Message sent successfully!");
-      }, function(error) {
-        alert("Failed to send message. Error: " + JSON.stringify(error));
-      });
-  });
-</script>
 </html>

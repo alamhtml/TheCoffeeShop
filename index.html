@@ -1,87 +1,76 @@
 <!DOCTYPE html>
-<html>
-   <head>
-      <title>MY Coffee Shop</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="stylesheet" href="sytle.css">
-   </head>
-   <div id="cart-display">
-  🛒 Cart Total: £<span id="cart-total">0.00</span>
-  <a href="checkout.html" id="checkout-link">Finish Order</a>
-</div>
-   <body>
-      <header>
-         <div>
-            <img src="./image/logo.png" alt="MY Coffee Shop Logo"  width="80">
-         </div>
-         <nav>
-            <ul>
-               <li><a href="./index.html">Home</a></li>
-               <li><a href="./Drinks.html">Drinks Menu</a></li>
-               <li><a href="Pastries.html">Pastries Menu</a></li>
-               <li><a href="./About_Us.html">Contact</a></li>
-            </ul>
-         </nav>
-      </header>
-       <section><center>
-            <h1>Welcome to MY Coffee Shop</h1>
-            <p>
-            Discover the best quality coffee and homemade baked goods in town.</center>
-            </p>
-                       
-         </section>
-      <body><center>
-         <img class="bar" src="./image/coffee_bar.jpeg" alt="Coffee Bar" width="500">
-         <h3>Your daily dose of happiness!</h3>
-         <a href="./Drinks.html" class="order-button">
-  <button><strong>Order Now</strong></button>
-</a>
-            <section class="Reviews">
-            <h2>Customer Reviews</h2>
-            <blockquote>
-               "The best coffee shop in town! Friendly staff, cozy ambiance, and delicious pastries." <br>
-               <cite>Alex</cite>
-            </blockquote>
-            <blockquote>
-               "I love their cappuccino and the homemade croissants. Highly recommended!" <br>
-               <cite>Jamie</cite>
-            </blockquote></center>
-         </section>
-<section class="contact-section">
-  <h2>Contact Us</h2>
-  <form>
-    <div class="form-group">
-      <label for="name">Name:</label>
-      <input id="name" type="text" placeholder="Your name" required>
-    </div>
-
-    <div class="form-group">
-      <label for="email">Email:</label>
-      <input id="email" type="email" placeholder="Your email" required>
-    </div>
-
-    <div class="form-group">
-      <label for="message">Message:</label>
-      <textarea id="message" placeholder="Your message" required></textarea>
-    </div>
-
-    <button type="submit">Send</button>
-  </form>
-</section>
-
-      <footer><center>
-        <div id="c">
-         <a href="https://www.facebook.com/"><img src="./image/Facebook.svg" width="40vw"></a>
-             <a href="https://www.twitter.com/"><img src="./image/Twitter.svg" width="40vw"></a>
-             <a href="https://www.instagram.com/"><img src="./image/nstagram.svg" width="40vw"></a>
-             <a href="https://www.linkedin.com/"><img src="./image/Linkedin.svg" width="40vw"></a>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Freshly brewed coffee and handmade pastries at MY Coffee Shop.">
+  <title>MY Coffee Shop | Coffee, made with care</title>
+  <link rel="stylesheet" href="sytle.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="MY Coffee Shop home">
+      <img src="image/logo.png" alt="" width="56" height="56">
+      <span>MY <strong>Coffee Shop</strong></span>
+    </a>
+    <nav aria-label="Main navigation">
+      <ul>
+        <li><a aria-current="page" href="index.html">Home</a></li>
+        <li><a href="Drinks.html">Drinks</a></li>
+        <li><a href="Pastries.html">Pastries</a></li>
+        <li><a href="About_Us.html">Our story</a></li>
+      </ul>
+    </nav>
+    <a class="header-cart" href="checkout.html" aria-label="View basket total, £">
+      Basket <span aria-hidden="true">· £</span><span id="cart-total">0.00</span>
+    </a>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">A little pause in your day</p>
+        <h1>Good coffee.<br>Good company.</h1>
+        <p>Thoughtfully brewed coffee and freshly baked favourites, made to make your day.</p>
+        <a class="button-link" href="Drinks.html">Explore the menu <span aria-hidden="true">→</span></a>
       </div>
-         <p><small>&copy; 2021 MY Coffee Shop</small></p>
-      </footer></center>
-   </body>
-   <script src="cart.js"></script>
-
+      <img class="hero-image" src="image/coffee_bar.jpeg" alt="The welcoming coffee bar at MY Coffee Shop">
+      <div class="hero-note"><span>Made fresh</span><span>Served with care</span></div>
+    </section>
+    <section class="welcome section-wrap">
+      <p class="eyebrow">Your neighbourhood coffee stop</p>
+      <h2>Something lovely is brewing.</h2>
+      <p>Settle in with your usual, try something new, or take a flaky pastry along for the ride.</p>
+      <div class="feature-links">
+        <a class="feature-card" href="Drinks.html">
+          <img src="image/latte.jpeg" alt="A freshly made latte" loading="lazy">
+          <span><strong>Find your favourite</strong><small>Browse our coffee &amp; drinks</small></span>
+          <span aria-hidden="true">↗</span>
+        </a>
+        <a class="feature-card" href="Pastries.html">
+          <img src="image/croissant.jpeg" alt="Golden, flaky croissant" loading="lazy">
+          <span><strong>A fresh-baked treat</strong><small>Explore pastries from our oven</small></span>
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </section>
+    <section class="quote-band">
+      <p>“The best coffee shop in town! Friendly staff, cozy ambiance, and delicious pastries.”</p>
+      <span>— Alex, customer</span>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <a class="brand brand-footer" href="index.html">
+      <img src="image/logo.png" alt="" width="44" height="44">
+      <span>MY <strong>Coffee Shop</strong></span>
+    </a>
+    <p>Good things, brewed daily.</p>
+    <div class="social-links" aria-label="Social media">
+      <a href="https://www.facebook.com/" aria-label="Facebook"><img src="image/Facebook.svg" alt=""></a>
+      <a href="https://www.instagram.com/" aria-label="Instagram"><img src="image/Instagram.svg" alt=""></a>
+      <a href="https://www.twitter.com/" aria-label="Twitter"><img src="image/Twitter.svg" alt=""></a>
+    </div>
+    <small>© <span data-year></span> MY Coffee Shop</small>
+  </footer>
+  <script src="cart.js" defer></script>
+</body>
 </html>
-
-
-
